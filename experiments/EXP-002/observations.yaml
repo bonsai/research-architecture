@@ -1,0 +1,19 @@
+id: EXP-002-observations
+rq: RQ-009
+schema:
+  observer: string
+  view_type: [plan, section, elevation, static_3d, animation]
+  frame_time: string
+  spatial_relation: string
+  relation_noticed: string
+  interpretation: string
+  confidence: float
+  counterexample: string
+  provenance:
+    source_geometry: string
+    renderer: string
+    renderer_version: string
+    camera: string
+    fps: number
+    seed: number
+records: []
