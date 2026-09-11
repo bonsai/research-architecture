@@ -1,83 +1,78 @@
 skeleton:
-  version: "0.1.0"
-  purpose: Research-question and extension skeleton for architecture research.
+  version: "0.2.0"
+  purpose: Minimal research planning skeleton for architecture research.
 
 prefixes:
   RQ:
     meaning: Research Question
-    role: Why / What to investigate
-    artifact: question, hypothesis, antithesis, acceptance criteria
+    ja: 研究問い
+    role: What is being asked
   EXT:
     meaning: Extension
-    role: How the question is extended into a reusable system
-    artifact: schema, implementation, experiment, integration, output
+    ja: 概念の拡張・展開
+    role: How the question is developed conceptually
+  EXP:
+    meaning: Experiment
+    ja: 実験・実装
+    role: How an extension is tested
+  RX:
+    meaning: Research eXperience
+    ja: 観察・経験
+    role: What is observed and learned
+
+flow: RQ -> EXT -> EXP -> RX -> Evidence -> ThesisRevision
 
 structure:
   RQ:
-    children:
-      - hypothesis
-      - antithesis
-      - evidence
-      - acceptance
-      - EXT
-  EXT:
-    parent: RQ
-    children:
-      - concept
-      - data
-      - rule
-      - geometry
-      - implementation
-      - evaluation
-      - provenance
-
-canonical:
-  - id: RQ-###
-    layer: question
     required:
-      - title
       - question
       - hypothesis
       - antithesis
       - acceptance
-  - id: EXT-###
-    layer: extension
+    next: EXT
+  EXT:
     required:
       - parent_rq
+      - concept
       - purpose
       - input
       - transformation
       - output
       - evaluation
       - provenance
+    next: EXP
+  EXP:
+    phase: 1
+    required:
+      - parent_ext
+      - method
+      - data
+      - result
+    next: RX
+  RX:
+    required:
+      - source
+      - observation
+      - interpretation
+      - next_question
 
-mapping:
-  RQ-001: EXP-001
-  RQ-002: EXP-002
-  RQ-003: EXP-003
-  RQ-004: EXP-005
-  RQ-005: EXP-006
-  RQ-006: EXP-007
-  RQ-007: EXP-008
+rules:
+  - One RQ has exactly one primary EXT.
+  - One EXT may have zero or more EXP.
+  - One EXP may produce zero or more RX.
+  - Phase 0 creates and refines RQ, EXT, Ontology, and dependencies only.
+  - Phase 0 does not create executable code or run experiments.
+  - EXP is the first layer where code and experimental execution are allowed.
+  - Visualization is an artifact unless an observation procedure and provenance make it evidence.
+  - Prediction is not fact; transformation is not copying.
 
-skeleton_graph: |
-  RQ
-   ├─ hypothesis
-   ├─ antithesis
-   ├─ evidence
-   ├─ acceptance
-   └─ EXT
-       ├─ concept
-       ├─ data
-       ├─ rule
-       ├─ geometry
-       ├─ implementation
-       ├─ evaluation
-       └─ provenance
+repository:
+  questions: RQ-###.md
+  extensions: EXT-###.md or EXT-###/
+  experiments: EXP-###/
+  rx: RX-###.md
+  ontology: ontology/
 
-rule:
-  - RQ defines the research intent.
-  - EXT defines the reusable extension from that intent.
-  - EXT must reference exactly one primary RQ.
-  - Existing EXP identifiers remain as legacy experiment identifiers.
-  - New Issues should prefer RQ-* and EXT-* prefixes.
+legacy:
+  - Existing EXP identifiers remain historical references.
+  - Detailed implementation issues are Phase 1 backlog, not Phase 0 work.
