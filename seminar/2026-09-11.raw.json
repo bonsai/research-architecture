@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1.0",
+  "type": "seminar_raw_conversation",
+  "date": "2026-09-11",
+  "repository": "bonsai/research-architecture",
+  "purpose": "ゼミ会話の生ログ保存。要約・解釈・研究構造化の前段階として原会話を残す。",
+  "messages": [
+    {
+      "role": "user",
+      "content": "https://github.com/bonsai/research-architecture/persona"
+    },
+    {
+      "role": "assistant",
+      "action": "persona/README.md を作成",
+      "content": "5人ラボメンバーのPersonaを research-architecture/persona に保存。"
+    },
+    {
+      "role": "user",
+      "content": "ゼミ議事録保存"
+    },
+    {
+      "role": "assistant",
+      "action": "seminar/2026-09-11.md を作成",
+      "content": "ゼミ議事録を保存。PersonaとSeminarを分離し、議論からRQを生成する構造を記録。"
+    },
+    {
+      "role": "user",
+      "content": "会話生ログ json"
+    }
+  ],
+  "notes": [
+    "このファイルは要約版の議事録ではなく、生ログ保存用。",
+    "後続処理でPersona別発言、問い、反証、実装案、新RQ候補などへ変換可能。",
+    "完全なチャット履歴ではなく、このゼミ記録として取得できた会話ログを保存する。"
+  ]
+}
