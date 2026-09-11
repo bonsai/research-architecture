@@ -1,32 +1,44 @@
 ontology:
   id: architecture-research
-  version: "0.1.0"
+  version: "0.2.0"
   label: Architecture Research Ontology
-  scope: EXP-001..EXP-008
+  scope: RQ-* / EXT-* (EXP-* retained as legacy)
+
+prefixes:
+  RQ:
+    meaning: Research Question
+    role: Research intent, hypothesis, antithesis, and acceptance.
+  EXT:
+    meaning: Extension
+    role: Reusable implementation or experimental extension of an RQ.
 
 classes:
+  ResearchQuestion:
+    description: Research question defining what and why to investigate.
+  Extension:
+    description: Reusable extension that operationalizes a ResearchQuestion.
   ArchitectureWork:
     description: Architectural work or research target.
   Representation:
-    description: CAD, BIM, mesh, image, animation, or other representation of a work.
+    description: CAD, BIM, mesh, image, animation, or other representation.
   ArchitecturalObject:
     description: Spatial or constructive object such as room, wall, opening, or structure.
   Geometry:
-    description: Geometric and topological representation of an object.
+    description: Geometric and topological representation.
   Feature:
-    description: Measured or computed property of geometry or an object.
+    description: Measured or computed property.
   SemanticConcept:
     description: Meaning, function, classification, or conceptual interpretation.
   SpatialRelation:
-    description: Relation between architectural objects in space.
+    description: Relation between architectural objects.
   TemporalState:
-    description: State of architecture at a time or frame.
+    description: State at a time or frame.
   Experience:
-    description: Human observation or spatial experience including body, view, and light.
+    description: Human observation or spatial experience.
   Material:
-    description: Physical material and its properties.
+    description: Physical material and properties.
   Fabrication:
-    description: Process by which geometry/material becomes a physical artifact.
+    description: Process becoming a physical artifact.
   Parameter:
     description: Variable controlling geometry, material, experience, or generation.
   Rule:
@@ -36,17 +48,32 @@ classes:
   Experiment:
     description: Reproducible research experiment.
   Observation:
-    description: Recorded observation from an experiment or experience.
+    description: Recorded observation.
   Evidence:
-    description: Measurement or traceable support for an observation or claim.
+    description: Measurement or traceable support.
   Prediction:
-    description: Model-derived prediction, including BQML output.
+    description: Model-derived prediction.
   Transformation:
     description: Structural transformation from one artifact/system into another.
   Provenance:
     description: Source, transformation, generation, and reproducibility metadata.
 
 relations:
+  hasExtension:
+    domain: ResearchQuestion
+    range: Extension
+  extends:
+    domain: Extension
+    range: ResearchQuestion
+  hasHypothesis:
+    domain: ResearchQuestion
+    range: SemanticConcept
+  hasAntithesis:
+    domain: ResearchQuestion
+    range: SemanticConcept
+  hasAcceptance:
+    domain: ResearchQuestion
+    range: Evidence
   hasRepresentation:
     domain: ArchitectureWork
     range: Representation
@@ -78,10 +105,10 @@ relations:
     domain: Material
     range: Fabrication
   hasParameter:
-    domain: [ArchitectureWork, ArchitecturalObject, Rule, ArchitectureGrammar]
+    domain: [ArchitectureWork, ArchitecturalObject, Rule, ArchitectureGrammar, Extension]
     range: Parameter
   hasRule:
-    domain: [Experiment, ArchitectureGrammar]
+    domain: [Experiment, ArchitectureGrammar, Extension]
     range: Rule
   hasGrammar:
     domain: ArchitectureWork
@@ -90,7 +117,7 @@ relations:
     domain: [ArchitectureGrammar, Rule, ArchitecturalObject]
     range: Rule
   observedBy:
-    domain: [ArchitectureWork, Experiment, Experience]
+    domain: [ArchitectureWork, ResearchQuestion, Extension, Experience]
     range: Observation
   supportedBy:
     domain: Observation
@@ -108,27 +135,27 @@ relations:
     domain: ArchitectureWork
     range: Transformation
   hasProvenance:
-    domain: [ArchitectureWork, Representation, Experiment, Transformation]
+    domain: [ArchitectureWork, Representation, Experiment, Extension, Transformation]
     range: Provenance
   producedBy:
     domain: [Geometry, Representation, Prediction]
     range: [Experiment, Fabrication]
 
-research_mapping:
-  EXP-001:
-    focus: [ArchitectureWork, Representation, ArchitecturalObject, Geometry, Feature, Provenance]
-  EXP-002:
-    focus: [TemporalState, Experience, Observation]
-  EXP-003:
-    focus: [SemanticConcept, TemporalState, Experience, Feature]
-  EXP-005:
-    focus: [Material, Fabrication, Geometry]
-  EXP-006:
-    focus: [Parameter, Rule, ArchitectureGrammar, Geometry]
-  EXP-007:
-    focus: [SemanticConcept, Observation, Evidence, Prediction]
-  EXP-008:
-    focus: [Transformation, Rule, ArchitectureGrammar, Provenance]
+skeleton:
+  RQ:
+    children: [hypothesis, antithesis, evidence, acceptance, EXT]
+  EXT:
+    parent: RQ
+    children: [concept, data, rule, geometry, implementation, evaluation, provenance]
+
+legacy_mapping:
+  EXP-001: RQ-001
+  EXP-002: RQ-002
+  EXP-003: RQ-003
+  EXP-005: RQ-004
+  EXP-006: RQ-005
+  EXP-007: RQ-006
+  EXP-008: RQ-007
 
 invariants:
   - Object is not Representation.
@@ -137,8 +164,12 @@ invariants:
   - Rule is not Geometry.
   - Prediction is not Fact.
   - Copy is not Transformation.
+  - RQ defines intent; EXT operationalizes it.
+  - Every EXT has exactly one primary RQ.
 
 pipeline:
+  - RQ
+  - EXT
   - Observe
   - Represent
   - Normalize
