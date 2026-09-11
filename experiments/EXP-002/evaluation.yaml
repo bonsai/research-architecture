@@ -1,0 +1,24 @@
+id: EXP-002
+type: evaluation
+rq: RQ-009
+status: proposed
+views:
+  - plan
+  - section
+  - elevation
+  - static_3d
+  - animation
+criteria:
+  - temporal_relation
+  - body_path
+  - viewpoint_dependency
+  - light_change
+  - spatial_relation
+  - explanatory_value
+  - reproducibility
+scoring:
+  0: not_observable
+  1: indirectly_observable
+  2: directly_observable
+  3: newly_exposed_relation
+rule: "Do not score a relation as new unless it cannot be obtained equivalently from the static baseline."
