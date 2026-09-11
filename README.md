@@ -1,8 +1,8 @@
 # research-architecture
 
-建築研究の**概念計画を実装するリポジトリ**。
+建築研究の**概念計画と実験基盤を実装するリポジトリ**。
 
-現在は Phase 0。コード・実験実行は行わず、研究問い・概念展開・Ontology・Issue構造を先に固定する。
+研究問い・概念構造を先に固定しつつ、研究基盤そのものは Phase 1 として実装・検証する。
 
 ## Research flow
 
@@ -23,14 +23,16 @@ Thesis / Revision      理論・問いの更新
 ### Phase rule
 
 ```text
-Phase 0 = Conceptual implementation
+Phase 0 = Research design
   RQ / EXT / Ontology / dependencies / acceptance
-  → code: NO
+  → domain research code: NO
 
 Phase 1 = Experimental implementation
   EXP / data / code / execution
   → code: YES
 ```
+
+`runtime/` は研究基盤そのものを検証するための実装層であり、runtime を実装したことは個別の建築 RQ が回答済みであることを意味しない。
 
 ## Repository structure
 
@@ -40,6 +42,7 @@ extensions/    EXT: 概念の拡張・展開
 experiments/   EXP: 実験・実装（Phase 1）
 rx/            RX: 観察・経験
 ontology/      共通語彙・構造
+runtime/       Research Runtime / AFW
 ```
 
 `extensions/` は実験置き場ではない。`EXT` は RQ から、概念・データ・規則・関係・評価・実験契約などを展開する層である。
@@ -83,6 +86,6 @@ RQ-010 Interactive Space / Time / Semantic
 
 ## Principle
 
-> 先に研究構造を実装し、あとからコードを実装する。
+> 先に研究構造を実装し、研究基盤を検証し、あとから個別の研究コードを実装する。
 >
-> Concept → RQ → EXT → EXP → Code
+> Concept → RQ → EXT → EXP → Code → Evidence → RX
