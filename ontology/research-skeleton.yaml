@@ -1,0 +1,83 @@
+skeleton:
+  version: "0.1.0"
+  purpose: Research-question and extension skeleton for architecture research.
+
+prefixes:
+  RQ:
+    meaning: Research Question
+    role: Why / What to investigate
+    artifact: question, hypothesis, antithesis, acceptance criteria
+  EXT:
+    meaning: Extension
+    role: How the question is extended into a reusable system
+    artifact: schema, implementation, experiment, integration, output
+
+structure:
+  RQ:
+    children:
+      - hypothesis
+      - antithesis
+      - evidence
+      - acceptance
+      - EXT
+  EXT:
+    parent: RQ
+    children:
+      - concept
+      - data
+      - rule
+      - geometry
+      - implementation
+      - evaluation
+      - provenance
+
+canonical:
+  - id: RQ-###
+    layer: question
+    required:
+      - title
+      - question
+      - hypothesis
+      - antithesis
+      - acceptance
+  - id: EXT-###
+    layer: extension
+    required:
+      - parent_rq
+      - purpose
+      - input
+      - transformation
+      - output
+      - evaluation
+      - provenance
+
+mapping:
+  RQ-001: EXP-001
+  RQ-002: EXP-002
+  RQ-003: EXP-003
+  RQ-004: EXP-005
+  RQ-005: EXP-006
+  RQ-006: EXP-007
+  RQ-007: EXP-008
+
+skeleton_graph: |
+  RQ
+   ├─ hypothesis
+   ├─ antithesis
+   ├─ evidence
+   ├─ acceptance
+   └─ EXT
+       ├─ concept
+       ├─ data
+       ├─ rule
+       ├─ geometry
+       ├─ implementation
+       ├─ evaluation
+       └─ provenance
+
+rule:
+  - RQ defines the research intent.
+  - EXT defines the reusable extension from that intent.
+  - EXT must reference exactly one primary RQ.
+  - Existing EXP identifiers remain as legacy experiment identifiers.
+  - New Issues should prefer RQ-* and EXT-* prefixes.
