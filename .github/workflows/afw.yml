@@ -2,6 +2,21 @@ name: Architecture AFW Proof
 
 on:
   workflow_dispatch:
+    inputs:
+      start_state:
+        description: AFW start state
+        required: true
+        default: intent
+        type: choice
+        options:
+          - intent
+          - rq
+          - task
+          - investigation
+          - experiment
+          - evidence
+          - reflection
+          - next_rq
   push:
     paths:
       - 'runtime/**'
@@ -18,17 +33,19 @@ jobs:
       - name: Run AFW tests
         run: python -m pytest -q runtime/test_afw.py
       - name: Run architecture AFW demo
+        env:
+          START_STATE: ${{ inputs.start_state }}
         run: |
-          cd runtime
-          python afw.py > ../afw-run.txt
+          python runtime/afw.py "${START_STATE:-intent}" | tee afw-run.json
       - name: Record evidence
         run: |
           mkdir -p evidence/afw
-          cp afw-run.txt evidence/afw/run.txt
+          cp afw-run.json evidence/afw/run.json
           printf '%s\n' \
             'Architecture AFW proof' \
             "sha=${GITHUB_SHA}" \
             "run_id=${GITHUB_RUN_ID}" \
+            "start_state=${START_STATE:-intent}" \
             > evidence/afw/metadata.md
       - name: Upload evidence
         uses: actions/upload-artifact@v4
