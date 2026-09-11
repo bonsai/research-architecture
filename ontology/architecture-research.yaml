@@ -1,0 +1,153 @@
+ontology:
+  id: architecture-research
+  version: "0.1.0"
+  label: Architecture Research Ontology
+  scope: EXP-001..EXP-008
+
+classes:
+  ArchitectureWork:
+    description: Architectural work or research target.
+  Representation:
+    description: CAD, BIM, mesh, image, animation, or other representation of a work.
+  ArchitecturalObject:
+    description: Spatial or constructive object such as room, wall, opening, or structure.
+  Geometry:
+    description: Geometric and topological representation of an object.
+  Feature:
+    description: Measured or computed property of geometry or an object.
+  SemanticConcept:
+    description: Meaning, function, classification, or conceptual interpretation.
+  SpatialRelation:
+    description: Relation between architectural objects in space.
+  TemporalState:
+    description: State of architecture at a time or frame.
+  Experience:
+    description: Human observation or spatial experience including body, view, and light.
+  Material:
+    description: Physical material and its properties.
+  Fabrication:
+    description: Process by which geometry/material becomes a physical artifact.
+  Parameter:
+    description: Variable controlling geometry, material, experience, or generation.
+  Rule:
+    description: Constraint or generative rule.
+  ArchitectureGrammar:
+    description: Reusable composition of architectural rules and relations.
+  Experiment:
+    description: Reproducible research experiment.
+  Observation:
+    description: Recorded observation from an experiment or experience.
+  Evidence:
+    description: Measurement or traceable support for an observation or claim.
+  Prediction:
+    description: Model-derived prediction, including BQML output.
+  Transformation:
+    description: Structural transformation from one artifact/system into another.
+  Provenance:
+    description: Source, transformation, generation, and reproducibility metadata.
+
+relations:
+  hasRepresentation:
+    domain: ArchitectureWork
+    range: Representation
+  represents:
+    domain: Representation
+    range: ArchitecturalObject
+  hasGeometry:
+    domain: ArchitecturalObject
+    range: Geometry
+  hasFeature:
+    domain: [ArchitecturalObject, Geometry]
+    range: Feature
+  hasSemantic:
+    domain: [ArchitectureWork, ArchitecturalObject]
+    range: SemanticConcept
+  participatesIn:
+    domain: ArchitecturalObject
+    range: SpatialRelation
+  hasTemporalState:
+    domain: ArchitectureWork
+    range: TemporalState
+  hasExperience:
+    domain: ArchitectureWork
+    range: Experience
+  hasMaterial:
+    domain: [ArchitecturalObject, Geometry]
+    range: Material
+  hasFabrication:
+    domain: Material
+    range: Fabrication
+  hasParameter:
+    domain: [ArchitectureWork, ArchitecturalObject, Rule, ArchitectureGrammar]
+    range: Parameter
+  hasRule:
+    domain: [Experiment, ArchitectureGrammar]
+    range: Rule
+  hasGrammar:
+    domain: ArchitectureWork
+    range: ArchitectureGrammar
+  constrainedBy:
+    domain: [ArchitectureGrammar, Rule, ArchitecturalObject]
+    range: Rule
+  observedBy:
+    domain: [ArchitectureWork, Experiment, Experience]
+    range: Observation
+  supportedBy:
+    domain: Observation
+    range: Evidence
+  predictedBy:
+    domain: [ArchitectureWork, Prediction]
+    range: Prediction
+  transformedFrom:
+    domain: Transformation
+    range: ArchitectureWork
+  transformedInto:
+    domain: Transformation
+    range: ArchitectureWork
+  hasTransformation:
+    domain: ArchitectureWork
+    range: Transformation
+  hasProvenance:
+    domain: [ArchitectureWork, Representation, Experiment, Transformation]
+    range: Provenance
+  producedBy:
+    domain: [Geometry, Representation, Prediction]
+    range: [Experiment, Fabrication]
+
+research_mapping:
+  EXP-001:
+    focus: [ArchitectureWork, Representation, ArchitecturalObject, Geometry, Feature, Provenance]
+  EXP-002:
+    focus: [TemporalState, Experience, Observation]
+  EXP-003:
+    focus: [SemanticConcept, TemporalState, Experience, Feature]
+  EXP-005:
+    focus: [Material, Fabrication, Geometry]
+  EXP-006:
+    focus: [Parameter, Rule, ArchitectureGrammar, Geometry]
+  EXP-007:
+    focus: [SemanticConcept, Observation, Evidence, Prediction]
+  EXP-008:
+    focus: [Transformation, Rule, ArchitectureGrammar, Provenance]
+
+invariants:
+  - Object is not Representation.
+  - Geometry is not Meaning.
+  - Visualization is not Evidence.
+  - Rule is not Geometry.
+  - Prediction is not Fact.
+  - Copy is not Transformation.
+
+pipeline:
+  - Observe
+  - Represent
+  - Normalize
+  - Measure
+  - Semanticize
+  - Store
+  - Compare
+  - Predict
+  - Generate
+  - Fabricate
+  - Experience
+  - Observe
