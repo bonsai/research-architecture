@@ -1,0 +1,26 @@
+version: "1.0.0"
+records:
+  - id: RX-001
+    date: "2026-09-11"
+    type: RX
+    source:
+      - issue: 27
+        type: LAB-MEETING
+      - issue: 26
+        type: LAB-RQ
+      - issue: 24
+        type: AW
+    question: "建築研究タイトルCorpusからテーマの出現・持続・ドリフト・空白を再現可能に測定できるか？"
+    observation:
+      - "建築研究Corpusを計算統計的に観測する方向へ移行した"
+      - "AI/BIM/CAD/mesh/Visualization/BQML/LLM/Agent/BATTAは分析・変換手段として配置できる"
+      - "タイトルCorpusは研究内容の真実ではなく研究表象上の統計的パターンを示す"
+    interpretation:
+      - "統計的観測と建築学的解釈を分離する必要がある"
+      - "BQML/bqmlite-goは研究対象ではなく分析手段"
+    next_question: "建築研究タイトルCorpusを用いてテーマの出現・持続・ドリフト・空白を再現可能に測定できるか？"
+    next_work:
+      - LAB-TASK
+      - AW
+      - DEV
+      - EXP
