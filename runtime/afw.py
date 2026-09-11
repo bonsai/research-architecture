@@ -1,10 +1,12 @@
-"""Minimal AFW runtime copied from research-lab for architecture research.
+"""Minimal AFW runtime for architecture research.
 
 Role layer: Subject -> Role -> Responsibility
 State layer: State -> Transition -> Loop
 """
 
 from dataclasses import dataclass, field
+import argparse
+import json
 from typing import Any
 
 
@@ -41,11 +43,11 @@ class AFW:
         return [t for t in self.transitions if t.source == self.state.state]
 
     def step(self, actor: str, output: dict[str, Any] | None = None) -> ResearchState:
+        if actor not in self.roles:
+            raise ValueError(f"unknown role: {actor!r}")
         candidates = [t for t in self.available() if t.actor == actor]
         if not candidates:
             raise ValueError(f"invalid transition: state={self.state.state!r}, actor={actor!r}")
-        if actor not in self.roles:
-            raise ValueError(f"unknown role: {actor!r}")
         transition = candidates[0]
         self.state.state = transition.target
         if output:
@@ -80,17 +82,70 @@ DEFAULT_TRANSITIONS = [
 ]
 
 
+DEMO_PATHS: dict[str, list[tuple[str, dict[str, Any]]]] = {
+    "intent": [
+        ("professor", {"intent": "Can architecture data become research evidence?"}),
+        ("researcher", {"rq": "Can a building corpus be made comparable?"}),
+        ("engineer", {"experiment": "build architecture corpus prototype"}),
+        ("analyst", {"evidence": "prototype produced comparable records"}),
+        ("analyst", {"reflection": "observation is reproducible enough for RX"}),
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "rq": [
+        ("researcher", {"rq": "Can a building corpus be made comparable?"}),
+        ("engineer", {"experiment": "build architecture corpus prototype"}),
+        ("analyst", {"evidence": "prototype produced comparable records"}),
+        ("analyst", {"reflection": "observation is reproducible enough for RX"}),
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "task": [
+        ("engineer", {"experiment": "build architecture corpus prototype"}),
+        ("analyst", {"evidence": "prototype produced comparable records"}),
+        ("analyst", {"reflection": "observation is reproducible enough for RX"}),
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "experiment": [
+        ("analyst", {"evidence": "prototype produced comparable records"}),
+        ("analyst", {"reflection": "observation is reproducible enough for RX"}),
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "investigation": [
+        ("analyst", {"evidence": "investigation produced comparable records"}),
+        ("analyst", {"reflection": "observation is reproducible enough for RX"}),
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "evidence": [
+        ("analyst", {"reflection": "observation is reproducible enough for RX"}),
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "reflection": [
+        ("professor", {"next_rq": "Which representation changes the result?"}),
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+    "next_rq": [
+        ("professor", {"rq": "Which representation changes the result?"}),
+    ],
+}
+
+
 def run_demo(start_state: str = "intent") -> ResearchState:
     runtime = AFW(DEFAULT_ROLES, DEFAULT_TRANSITIONS, start_state)
-    return runtime.run({
-        "intent": [("professor", {"intent": "Can architecture data become research evidence?"})],
-        "rq": [("researcher", {"rq": "Can a building corpus be made comparable?"})],
-        "task": [("engineer", {"experiment": "build architecture corpus prototype"})],
-        "experiment": [("analyst", {"evidence": "prototype produced comparable records"})],
-    }.get(start_state, []))
+    return runtime.run(DEMO_PATHS[start_state])
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Run the architecture AFW research loop.")
+    parser.add_argument("start_state", nargs="?", default="intent", choices=sorted(DEMO_PATHS))
+    args = parser.parse_args()
+    result = run_demo(args.start_state)
+    print(json.dumps({"history": result.history, "state": result.state, "payload": result.payload}, ensure_ascii=False))
 
 
 if __name__ == "__main__":
-    result = run_demo("intent")
-    print(" -> ".join(result.history))
-    print(result.payload)
+    main()
