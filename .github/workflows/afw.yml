@@ -1,0 +1,37 @@
+name: Architecture AFW Proof
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'runtime/**'
+      - '.github/workflows/afw.yml'
+
+jobs:
+  afw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Run AFW tests
+        run: python -m pytest -q runtime/test_afw.py
+      - name: Run architecture AFW demo
+        run: |
+          cd runtime
+          python afw.py > ../afw-run.txt
+      - name: Record evidence
+        run: |
+          mkdir -p evidence/afw
+          cp afw-run.txt evidence/afw/run.txt
+          printf '%s\n' \
+            'Architecture AFW proof' \
+            "sha=${GITHUB_SHA}" \
+            "run_id=${GITHUB_RUN_ID}" \
+            > evidence/afw/metadata.md
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-afw-evidence-${{ github.run_id }}
+          path: evidence/afw/
